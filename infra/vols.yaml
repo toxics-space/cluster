@@ -1,0 +1,29 @@
+#  Create automatical volume
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: registry-claim-auto
+#   namespace: infra
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   volumeMode: Filesystem
+#   resources:
+#     requests:
+#       storage: 10Gi
+#   storageClassName: local-path
+# ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-claim-local
+  namespace: infra
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local
+  volumeName: persistent-volume-10gi

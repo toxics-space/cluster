@@ -1,0 +1,68 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: infra-ingress
+#   namespace: infra
+#   annotations:
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+# spec:
+#   rules:
+#     - host: reg.toxics.space
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: container-redistry-svc
+#                 port:
+#                   number: 5000
+#     - host: infra-test.toxics.space
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: hello-world-svc
+#                 port:
+#                   number: 80
+
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: infra-ingress
+  namespace: infra
+spec:
+  # entryPoints:
+  #   - websecure
+  routes:
+    - kind: Rule
+      match: Host(`reg.toxics.space`)
+      priority: 1
+      middlewares:
+      - name: redirect-to-https
+      services:
+      - name: container-redistry-svc
+        port: 5000
+    - kind: Rule
+      match: Host(`infra-test.toxics.space`)
+      priority: 1
+      middlewares:
+      - name: redirect-to-https
+      services:
+      - name: hello-world-svc
+        port: 80
+  tls:
+    certResolver: le
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: infra
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true

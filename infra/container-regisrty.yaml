@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container-redistry-pod
+  namespace: infra
+  labels:
+    app.kubernetes.io/name: container-redistry-pod
+spec:
+  containers:
+  - name: registry
+    image: registry:2.8.1
+    ports:
+    - name: reg-api-web-svc
+      containerPort: 5000
+    env:
+    - name: REGISTRY_AUTH
+      value: "htpasswd"
+    - name: REGISTRY_AUTH_HTPASSWD_REALM
+      value: "Registry Realm"
+    - name: REGISTRY_AUTH_HTPASSWD_PATH
+      value: "/auth/htpasswd"
+    volumeMounts:
+    - mountPath: "/var/lib/registry"
+      name: registry-storage
+    - mountPath: "/auth"
+      name: registry-users
+      readOnly: true
+  volumes:
+  - name: registry-storage
+    persistentVolumeClaim:
+      claimName: registry-claim-local
+  - name: registry-users
+    secret:
+      secretName: registry-users
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: container-redistry-svc
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: container-redistry-pod
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: reg-api-web-svc
+
+# http://reg.toxics.space/v2/_catalog
+
+
+# on each node and reboot > sudo vim /etc/rancher/k3s/registries.yaml
+# mirrors:
+#   "reg.toxics.space":
+#    endpoint:
+#      - "http://reg.toxics.space"

@@ -1,0 +1,54 @@
+# docker pull gcr.io/google-samples/node-hello:1.0
+# docker tag gcr.io/google-samples/node-hello:1.0 reg.toxics.space/hello
+# docker image push reg.toxics.space/hello
+# curl http://reg.toxics.space/v2/_catalog
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+  namespace: infra
+  labels:
+    app.kubernetes.io/name: hello-world-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hello-world-deployment
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hello-world-deployment
+    spec:
+      imagePullSecrets:
+      - name: secret-dockercfg
+      containers:
+      # - image: gcr.io/google-samples/node-hello:1.0
+      - image: reg.toxics.space/hello  
+        imagePullPolicy: Always
+        name: hello-world
+        ports:
+        - name: helloworld-port
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: infra
+  name: hello-world-svc
+spec:
+  # https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-type-loadbalancer
+  # type: LoadBalancer
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: hello-world-deployment
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: helloworld-port
+
+  # http://176.124.208.135:5432/
+  # http://88.210.12.58:5432/ 
+
+#  forward port from local (9090) to pod (8080)
+# kubectl port-forward <pod> 9090:8080 -n infra

@@ -1,0 +1,30 @@
+# Instead of original Ingress use traefik because of middlewares and simple https
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: monitoring-ingress
+  namespace: monitoring
+spec:
+  # entryPoints:
+  #   - websecure
+  routes:
+    - kind: Rule
+      match: Host(`grafana.toxics.space`)
+      priority: 1
+      middlewares:
+      - name: redirect-to-https
+      services:
+      - name: grafana-svc
+        port: 8080
+  tls:
+    certResolver: le
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: monitoring
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true

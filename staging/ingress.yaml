@@ -24,14 +24,6 @@ spec:
       services:
       - name: ui-app-svc
         port: 8088
-    - kind: Rule
-      match: Host(`guestbook.toxics.space`)
-      priority: 1
-      middlewares:
-      - name: redirect-to-https
-      services:
-      - name: guestbook-ui
-        port: 80
   tls:
     certResolver: le
 ---

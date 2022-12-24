@@ -15,14 +15,6 @@ spec:
       services:
       - name: container-redistry-svc
         port: 5000
-    - kind: Rule
-      match: Host(`infra-test.toxics.space`)
-      priority: 1
-      middlewares:
-      - name: redirect-to-https
-      services:
-      - name: hello-world-svc
-        port: 80
   tls:
     certResolver: le
 ---

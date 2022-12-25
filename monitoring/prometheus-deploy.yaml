@@ -23,6 +23,10 @@ spec:
             - "--storage.tsdb.path=/prometheus/"
           ports:
             - containerPort: 9090
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
           volumeMounts:
             - name: prometheus-config-volume
               mountPath: /etc/prometheus/
@@ -54,4 +58,4 @@ spec:
       port: 80
       targetPort: 9090
 
-# prometheus-svc.monitoring.svc.cluster.local
+# http://prometheus-svc.monitoring.svc.cluster.local

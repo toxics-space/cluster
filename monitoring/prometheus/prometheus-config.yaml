@@ -2,9 +2,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-server-conf
-  labels:
-    name: prometheus-server-conf
   namespace: monitoring
+  labels:
+    environment: infra
 data:
 # Original here: https://github.com/techiescamp/kubernetes-prometheus/blob/master/config-map.yaml 
 

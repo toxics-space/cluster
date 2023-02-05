@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prometheus-deployment
+  name: prometheus
   namespace: monitoring
   labels:
-    app.kubernetes.io/name: prometheus-server
+    environment: infra
 spec:
-  # replicas: 1
+  replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: prometheus-server
+      app: prometheus-server
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: prometheus-server
+        app: prometheus-server
     spec:
       nodeSelector: 
         storage: "true"
@@ -58,10 +58,12 @@ kind: Service
 metadata:
   namespace: monitoring
   name: prometheus-svc
+  labels:
+    environment: infra
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: prometheus-server
+    app: prometheus-server
   ports:
     - protocol: TCP
       port: 80

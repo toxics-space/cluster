@@ -7,22 +7,19 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    # app: grafana
-    app.kubernetes.io/name: grafana-deployment
   name: grafana
   namespace: monitoring
+  labels:
+    environment: infra
 spec:
-  # replicas: 1
+  replicas: 1
   selector:
     matchLabels:
-      # app: grafana
-      app.kubernetes.io/name: grafana-deployment
+      app: grafana
   template:
     metadata:
       labels:
         app: grafana
-        app.kubernetes.io/name: grafana-deployment
     spec:
       nodeSelector: 
         storage: "true"
@@ -51,32 +48,19 @@ spec:
         - mountPath: /var/lib/grafana
           name: grafana-storage
           readOnly: false
-        # nodeSelector:
-        # node-type: worker
-      initContainers:
-      # allow access to PV for any user, prom runs not as a root
-      - name: grafana-data-permission-fix
-        image: busybox
-        command: ["/bin/chmod","-R","777", "/data"]
-        volumeMounts:
-          - name: grafana-storage
-            mountPath: /data
-      # securityContext:
-      #   fsGroup: 65534
-      #   runAsNonRoot: true
-      #   runAsUser: 65534
-      serviceAccountName: grafana
-      
+      serviceAccountName: grafana   
 ---
 apiVersion: v1
 kind: Service
 metadata:
   namespace: monitoring
   name: grafana-svc
+  labels:
+    environment: infra
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: grafana-deployment
+    app: grafana
   ports:
     - protocol: TCP
       port: 8080

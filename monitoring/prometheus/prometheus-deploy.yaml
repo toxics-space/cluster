@@ -15,6 +15,16 @@ spec:
       labels:
         app.kubernetes.io/name: prometheus-server
     spec:
+      nodeSelector: 
+        storage: "true"
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-server-conf
+        - name: prometheus-storage-volume
+          persistentVolumeClaim:
+            claimName: pvc-prometheus
       containers:
         - name: prometheus
           image: prom/prometheus
@@ -30,17 +40,16 @@ spec:
           volumeMounts:
             - name: prometheus-config-volume
               mountPath: /etc/prometheus/
-            # - name: prometheus-storage-volume
-            #   mountPath: /prometheus/
-      volumes:
-        - name: prometheus-config-volume
-          configMap:
-            defaultMode: 420
-            name: prometheus-server-conf
-  
-        # - name: prometheus-storage-volume
-        #   emptyDir: {}
-
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      initContainers:
+        # allow access to PV for any user, prom runs not as a root
+        - name: prometheus-data-permission-fix
+          image: busybox
+          command: ["/bin/chmod","-R","777", "/data"]
+          volumeMounts:
+            - name: prometheus-storage-volume
+              mountPath: /data
 # kubectl port-forward pod/prometheus-deployment-5f7687766d-bl4m9 8080:9090 -n monitoring
 # https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/
 ---

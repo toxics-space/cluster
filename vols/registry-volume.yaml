@@ -22,4 +22,3 @@ spec:
               operator: In
               values:
                 - v1536572.hosted-by-vdsina.ru # create necessary directory here
-

@@ -1,7 +1,6 @@
 **/.DS_Store
 .gitsecret/keys/random_seed
 !*.secret
-vdsina-cluster.yaml
 infra/secret.yaml
-staging/secret.yaml
 prod/secret.yaml
+vdsina-cluster.yaml

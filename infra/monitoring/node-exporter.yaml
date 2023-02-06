@@ -3,17 +3,22 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: node-exporter
-  namespace: monitoring
+  namespace: infra
   labels:
     environment: infra
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: node-exporter
 spec:
   selector:
     matchLabels:
-      app: node-exporter
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: node-exporter
   template:
     metadata:
       labels:
-        app: node-exporter
+        environment: infra
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: node-exporter
     spec:
       containers:
       - name: node-exporter
@@ -55,14 +60,18 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: node-exporter-svc
-  namespace: monitoring
+  # name is important for prometheus config, it looks for endpoints
+  name: node-exporter
+  namespace: infra
+  labels:
+    environment: infra
   annotations:
     prometheus.io/scrape: 'true'
     prometheus.io/port:   '9100'
 spec:
   selector:
-    app: node-exporter
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: node-exporter
   ports:
   - name: node-exporter
     protocol: TCP

@@ -5,9 +5,10 @@ metadata:
 spec:
   storageClassName: prom-volume
   capacity:
-   storage: 5Gi
+    storage: 5Gi
+  volumeMode: Filesystem
   accessModes:
-   - ReadWriteOnce
+  - ReadWriteOnce
   hostPath:
     path: "/mnt/prom-data"
   nodeAffinity:

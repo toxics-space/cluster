@@ -2,8 +2,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: staging-ingress
-  namespace: staging
+  name: prod-ingress
+  namespace: prod
 spec:
   # entryPoints:
   #   - websecure
@@ -31,7 +31,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: redirect-to-https
-  namespace: staging
+  namespace: prod
 spec:
   redirectScheme:
     scheme: https

@@ -5,9 +5,10 @@ metadata:
 spec:
   storageClassName: db-volume
   capacity:
-   storage: 10Gi
+    storage: 10Gi
+  volumeMode: Filesystem
   accessModes:
-   - ReadWriteOnce
+  - ReadWriteOnce
   hostPath:
     path: "/mnt/pg-data"
   nodeAffinity:

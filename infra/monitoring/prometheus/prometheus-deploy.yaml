@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: monitoring
+  namespace: infra
   labels:
     environment: infra
 spec:
@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: prometheus-server
+        environment: infra
     spec:
       nodeSelector: 
         storage: "true"
@@ -56,7 +57,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: monitoring
+  namespace: infra
   name: prometheus-svc
   labels:
     environment: infra

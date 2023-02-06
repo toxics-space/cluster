@@ -4,3 +4,4 @@
 vdsina-cluster.yaml
 infra/secret.yaml
 staging/secret.yaml
+prod/secret.yaml

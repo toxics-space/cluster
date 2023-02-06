@@ -15,6 +15,14 @@ spec:
       services:
       - name: container-redistry-svc
         port: 5000
+    - kind: Rule
+      match: Host(`grafana.toxics.space`)
+      priority: 1
+      middlewares:
+      - name: redirect-to-https
+      services:
+      - name: grafana-svc
+        port: 8080
   tls:
     certResolver: le
 ---

@@ -47,6 +47,8 @@ docker image pull reg.toxics.space/nginx
 
 kubectl rollout restart  deployment/landing-app -n staging
 
+
+kubectl patch pv <PV_TO_RELEASE> -p '{"spec":{"claimRef": null}}'
 ```
 
 ## Notes

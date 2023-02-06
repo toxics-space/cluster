@@ -4,7 +4,8 @@ metadata:
   name: container-redistry-pod
   namespace: infra
   labels:
-    app.kubernetes.io/name: container-redistry-pod
+    app: docker-redistry
+    environment: infra
 spec:
   containers:
   - name: registry
@@ -41,7 +42,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: container-redistry-pod
+    app: docker-redistry
   ports:
     - protocol: TCP
       port: 5000

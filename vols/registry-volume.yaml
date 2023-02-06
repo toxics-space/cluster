@@ -4,9 +4,10 @@ metadata:
   name: persistent-volume-10gi
 spec:
   capacity:
-   storage: 10Gi
+    storage: 10Gi
+  volumeMode: Filesystem
   accessModes:
-   - ReadWriteOnce
+  - ReadWriteOnce
   hostPath:
     path: "/mnt/data"
   storageClassName: local

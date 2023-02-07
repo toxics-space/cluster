@@ -25,6 +25,13 @@ spec:
       - name: postgres
         image: postgres:12
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2000Mi
+          limits:
+            cpu: 700m
+            memory: 2000Mi
         env:
         - name: DB_USER
           value: postgres

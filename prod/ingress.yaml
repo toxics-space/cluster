@@ -5,8 +5,8 @@ metadata:
   name: prod-ingress
   namespace: prod
 spec:
-  # entryPoints:
-  #   - websecure
+  entryPoints:
+  - websecure
   routes:
     - kind: Rule
       match: Host(`toxics.space`)
@@ -25,7 +25,7 @@ spec:
       - name: ui-app-svc
         port: 8088
   tls:
-    certResolver: le
+    certResolver: leresolver
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -35,4 +35,4 @@ metadata:
 spec:
   redirectScheme:
     scheme: https
-    permanent: true
+    # permanent: true

@@ -5,7 +5,7 @@ metadata:
   namespace: infra
 spec:
   hard:
-    requests.cpu: "800m"  
+    requests.cpu: "1200m"  
     limits.cpu: "2000m"
     requests.storage: "40Gi"
 

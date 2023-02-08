@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: infra
+  labels:
+    environment: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki-server
+  template:
+    metadata:
+      labels:
+        app: loki-server
+        environment: infra
+    spec:
+      # nodeSelector: 
+      #   storage: "true"
+      volumes:
+        - name: loki-config-volume
+          configMap:
+            defaultMode: 420
+            name: loki-server-conf
+        - name: loki-storage-volume
+          persistentVolumeClaim:
+            claimName: pvc-loki
+      containers:
+        - name: loki
+          image: grafana/loki:latest
+          args:
+            - "--config.file=/etc/loki/loki.yaml"
+          ports:
+            - containerPort: 3100
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          volumeMounts:
+            - name: loki-config-volume
+              mountPath: /etc/loki/
+            - name: loki-storage-volume
+              mountPath: /loki/
+      initContainers:
+        # allow access to PV for any user, prom runs not as a root
+        - name: loki-data-permission-fix
+          image: busybox
+          resources:
+            limits:
+              cpu: 50m
+              memory: 50Mi
+          command: ["/bin/chmod","-R","777", "/loki"]
+          volumeMounts:
+            - name: loki-storage-volume
+              mountPath: /loki
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: infra
+  name: loki-svc
+  labels:
+    environment: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: loki-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3100
+
+# http://loki-svc.infra.svc.cluster.local

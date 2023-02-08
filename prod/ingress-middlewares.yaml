@@ -1,0 +1,24 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: prod
+spec:
+  redirectScheme:
+    scheme: https
+    # permanent: true
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: cors-headers
+#   namespace: prod
+# spec:
+#   headers:
+#     accessControlAllowMethods:
+#       - "GET"
+#       - "OPTIONS"
+#       - "PUT"
+#     accessControlAllowOrigin: 
+#       - "*"
+#     accessControlMaxAge: 100

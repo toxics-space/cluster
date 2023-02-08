@@ -25,14 +25,4 @@ spec:
       - name: ui-app-svc
         port: 8088
   tls:
-    certResolver: leresolver
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: redirect-to-https
-  namespace: prod
-spec:
-  redirectScheme:
-    scheme: https
-    # permanent: true
+    certResolver: le
